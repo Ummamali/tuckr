@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../context/AppContextProvides";
 
 export default function Header() {
+  const appCtx = useContext(AppContext);
   return (
     <header className="">
       <div className="max-w-app mx-auto px-appX py-4 flex items-center justify-between">
@@ -8,7 +10,10 @@ export default function Header() {
           <img src="/logo.png" alt="Logo" width={70} />
           <h2 className="font-logo text-3xl text-highlight">Tuckr</h2>
         </div>
-        <button className="py-2 px-10 border border-highlight rounded-sm text-highlight">
+        <button
+          className="py-2 px-10 border border-highlight rounded-sm text-highlight"
+          onClick={appCtx.openOrderModal}
+        >
           Cart (5)
         </button>
       </div>
