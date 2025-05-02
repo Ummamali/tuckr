@@ -66,7 +66,7 @@ const dummyFoodItems = {
 
 export default function FoodItemGrid() {
   return (
-    <div className="max-w-module px-appX py-8 mx-auto grid grid-cols-3 gap-6 ">
+    <div className="max-w-module mx-auto grid grid-cols-3 gap-5 ">
       {Object.entries(dummyFoodItems).map(([id, item]) => (
         <ItemCard key={id} id={id} {...item} />
       ))}
