@@ -1,0 +1,45 @@
+/* This magma file contains base classes for utility components, written in tailwindcss styles  */
+@reference "tailwindcss";
+
+/* directly modifying styles */
+button:not(:disabled):hover {
+  @apply cursor-pointer brightness-110;
+}
+
+/* --------------------------- For ref form groups */
+.ref-form-group input,
+.state-form-group input {
+  @apply block w-full border border-gray-400 py-2 px-2 rounded-sm outline-none focus:border-gray-800;
+}
+
+.ref-form-group input:disabled,
+.state-form-group input:disabled {
+  @apply bg-gray-100 cursor-text;
+}
+
+.ref-form-group label,
+.state-form-group label {
+  @apply block mb-1 text-gray-800;
+}
+
+/* ----- For Vaidated Form Group */
+.validated-ref-fg .err-msg,
+.validated-state-fg .err-msg {
+  @apply hidden text-red-600;
+}
+
+/* Error cases */
+
+.validated-ref-fg.invalid input,
+.validated-state-fg.invalid input {
+  @apply border-red-500 bg-red-100/40;
+}
+.validated-ref-fg.invalid input::placeholder,
+.validated-state-fg.invalid input::placeholder {
+  @apply text-red-600/70;
+}
+
+.validated-ref-fg.invalid .err-msg,
+.validated-state-fg.invalid .err-msg {
+  @apply block;
+}
