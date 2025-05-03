@@ -12,7 +12,7 @@ export default function ItemStep({ fadeout, afterFadeout }) {
   }, []);
 
   useEffect(() => {
-    if (fadeout) {
+    if (fadeout === "ITEMS_STEP") {
       animate(".items-step", {
         opacity: 0,
         height: 0,
