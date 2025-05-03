@@ -1,26 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useActionState, useEffect } from "react";
+import { animate } from "animejs";
 import RefFormGroup from "../../utils/RefFormGroup";
 import ValidatedRefFG from "../../utils/ValidatedRefFG";
-import useValidator from "../../../hooks/useValidator";
-import { animate } from "animejs";
-
-const identityList = {
-  firstName: "Invalid First Name...",
-  lastName: "Invalid Last Name...",
-  emailAddress: "Invalid Email Address...",
-  street: "Invalid street Address...",
-  postalCode: "Invalid postal code...",
-  city: "Invalid city ...",
-};
-
-const validatorPredicates = {
-  firstName: (value) => ({ isValid: value.length > 0 }),
-  lastName: (value) => ({ isValid: value.length > 0 }),
-  emailAddress: (value) => ({ isValid: value.length > 0 }),
-  street: (value) => ({ isValid: value.length > 0 }),
-  postalCode: (value) => ({ isValid: value.length > 0 }),
-  city: (value) => ({ isValid: value.length > 0 }),
-};
+import useValidator, { syncValidateAll } from "../../../hooks/useValidator";
+import { identityList, validatorPredicates } from "./checkoutValidations";
 
 export default function CheckoutStep({ fadeout, afterFadeout }) {
   const { validityStatuses, validate, dispatchValidity } = useValidator(
@@ -39,6 +22,18 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
       });
     }
   }, [fadeout]);
+
+  function formAction(prevState, formData) {
+    const formValues = Object.fromEntries(formData.entries());
+    if (syncValidateAll(formValues, validate)) {
+      console.log("submitted");
+      return {};
+    } else {
+      return formValues;
+    }
+  }
+
+  const [formState, action] = useActionState(formAction, {});
   return (
     <div className="checkout-step">
       <div className="mb-4">
@@ -47,7 +42,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
           Enter Your Details to Complete Your Purchase
         </p>
       </div>
-      <form className="space-y-4">
+      <form className="space-y-4" action={action}>
         <div className="grid grid-cols-2 gap-4">
           <ValidatedRefFG
             identity="firstName"
@@ -57,6 +52,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
             inputProps={{
               placeholder: "Enter first name here...",
               onBlur: (e) => validate("firstName", e.target.value),
+              defaultValue: formState.firstName,
             }}
           />
           <ValidatedRefFG
@@ -67,6 +63,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
             inputProps={{
               placeholder: "Enter last name here...",
               onBlur: (e) => validate("lastName", e.target.value),
+              defaultValue: formState.lastName,
             }}
           />
         </div>
@@ -78,6 +75,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
           inputProps={{
             placeholder: "Enter last name here...",
             onBlur: (e) => validate("emailAddress", e.target.value),
+            defaultValue: formState.emailAddress,
           }}
         />
         <ValidatedRefFG
@@ -88,6 +86,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
           inputProps={{
             placeholder: "Enter street address here...",
             onBlur: (e) => validate("street", e.target.value),
+            defaultValue: formState.street,
           }}
         />
         <div className="grid grid-cols-2 gap-4">
@@ -99,6 +98,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
             inputProps={{
               placeholder: "Enter postal code here...",
               onBlur: (e) => validate("postalCode", e.target.value),
+              defaultValue: formState.postalCode,
             }}
           />
           <ValidatedRefFG
@@ -109,9 +109,13 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
             inputProps={{
               placeholder: "Enter city name here...",
               onBlur: (e) => validate("city", e.target.value),
+              defaultValue: formState.city,
             }}
           />
         </div>
+        <button className="py-2 px-14 bg-highlight text-white/90 block ml-auto rounded shadow-sm">
+          Submit
+        </button>
       </form>
     </div>
   );

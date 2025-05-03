@@ -6,6 +6,10 @@ button:not(:disabled):hover {
   @apply cursor-pointer brightness-110;
 }
 
+button:disabled {
+  @apply saturate-0 opacity-70;
+}
+
 /* --------------------------- For ref form groups */
 .ref-form-group input,
 .state-form-group input {

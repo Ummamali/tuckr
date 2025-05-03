@@ -7,6 +7,12 @@ export default function ModalList() {
   const foodItems = appCtx.foodItems;
   return (
     <div className="space-y-2">
+      {Object.keys(appCtx.orders).length === 0 && (
+        <p className="text-center text-black/60 text-sm">
+          <span className="font-medium">No Orderds!</span> Looks like you
+          haven’t placed any orders yet!
+        </p>
+      )}
       {Object.entries(appCtx.orders).map(([foodId, count]) => (
         <div key={foodId} className="flex items-center justify-between">
           <div>

@@ -58,6 +58,7 @@ export default function OrderModal() {
                   : "border border-highlight text-highlight"
               }`}
               onClick={triggerFadeout}
+              disabled={Object.keys(appCtx.orders).length === 0}
             >
               {step === 0 ? "Go to Checkout" : "Go Back"}
             </button>
