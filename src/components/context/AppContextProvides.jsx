@@ -9,6 +9,7 @@ export const AppContext = createContext({
   closeOrderModal: () => null,
   orders: {},
   placeOrder: () => null,
+  additionalCharges: [],
 });
 
 export default function AppContextProvides({ children }) {
@@ -16,14 +17,28 @@ export default function AppContextProvides({ children }) {
   const [orders, setOrders] = useState({});
   const [orderModalOpen, openOrderModal, closeOrderModal] = useModal();
 
+  const additionalCharges = [
+    ["Shipping", "Free"],
+    ["Estimated Tax", "$0.00"],
+    ["Est. Delivery", "3-4 hours"],
+  ];
+
   function loadFoodItems(newItems) {
     setFoodItems((prev) => ({ ...prev, ...newItems }));
   }
 
-  function placeOrder(orderId) {
+  function placeOrder(orderId, amount = 1) {
     setOrders((prev) => {
       const cp = { ...prev };
-      cp[orderId] = cp[orderId] !== undefined ? cp[orderId] + 1 : 1;
+      const newAmount =
+        cp[orderId] !== undefined ? cp[orderId] + amount : amount;
+
+      if (newAmount <= 0) {
+        delete cp[orderId];
+      } else {
+        cp[orderId] = newAmount;
+      }
+      return cp;
     });
   }
   return (
@@ -36,6 +51,7 @@ export default function AppContextProvides({ children }) {
         closeOrderModal,
         orders,
         placeOrder,
+        additionalCharges,
       }}
     >
       {children}

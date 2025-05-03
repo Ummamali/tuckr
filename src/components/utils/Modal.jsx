@@ -7,7 +7,7 @@ export default function Modal({
   closeOnBackdropClick = true,
 }) {
   return createPortal(
-    <div className="fixed w-screen h-screen z-10 top-0 left-0">
+    <div className="fixed w-screen h-screen z-20 top-0 left-0">
       <div
         className="absolute w-full h-full top-0 left-0 bg-black/90 cursor-pointer"
         onClick={closeOnBackdropClick ? close : undefined}
