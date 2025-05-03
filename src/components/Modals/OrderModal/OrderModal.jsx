@@ -1,22 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Modal from "../../utils/Modal";
 import { AppContext } from "../../context/AppContextProvides";
 import ModalList from "./ModalList";
+import ItemStep from "./ItemStep";
+import CheckoutStep from "./CheckoutStep";
+
+const MODAL_STEPS = ["ITEMS", "CHECKOUT"];
 
 export default function OrderModal() {
+  const [itemsFadeout, setItemsFadeout] = useState(false);
+  const [step, setStep] = useState(0);
   const appCtx = useContext(AppContext);
   const total = Object.entries(appCtx.orders)
     .map(([id, count]) => appCtx.foodItems[id].price * count)
     .reduce((a, b) => a + b, 0);
   return (
     <Modal close={appCtx.closeOrderModal}>
-      <div className="mb-4">
-        <h2 className="text-2xl text-black/80">Your Cart</h2>
-        <p className="text-sm text-black/60">
-          Don’t Miss Out — Complete Your Order Now
-        </p>
-      </div>
-      <ModalList />
+      {step === 0 ? (
+        <ItemStep
+          fadeout={itemsFadeout}
+          afterFadeout={() => setStep((prev) => prev + 1)}
+        />
+      ) : step === 1 ? (
+        <CheckoutStep />
+      ) : null}
       <div className="mt-4 border-t border-gray-400/60 py-3 flex justify-between items-end">
         <div className="flex items-center space-x-2">
           <img src="/shield.png" alt="Shield-X" width={30} />
@@ -37,7 +44,10 @@ export default function OrderModal() {
           </div>
           <div className="flex space-x-3 justify-end">
             <button onClick={appCtx.closeOrderModal}>Close</button>
-            <button className="py-2 px-8 bg-highlight rounded text-white/80">
+            <button
+              className="py-2 px-8 bg-highlight rounded text-white/80"
+              onClick={() => setItemsFadeout(true)}
+            >
               Go to Checkout
             </button>
           </div>
