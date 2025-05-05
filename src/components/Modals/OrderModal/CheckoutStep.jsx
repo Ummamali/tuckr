@@ -1,11 +1,14 @@
-import React, { useActionState, useEffect } from "react";
+import React, { useActionState, useContext, useEffect } from "react";
 import { animate } from "animejs";
 import RefFormGroup from "../../utils/RefFormGroup";
 import ValidatedRefFG from "../../utils/ValidatedRefFG";
 import useValidator, { syncValidateAll } from "../../../hooks/useValidator";
 import { identityList, validatorPredicates } from "./checkoutValidations";
+import { requestCreateOrder } from "../../../backend/connect";
+import { AppContext } from "../../context/AppContextProvides";
 
 export default function CheckoutStep({ fadeout, afterFadeout }) {
+  const appCtx = useContext(AppContext);
   const { validityStatuses, validate, dispatchValidity } = useValidator(
     identityList,
     validatorPredicates
@@ -23,17 +26,20 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
     }
   }, [fadeout]);
 
-  function formAction(prevState, formData) {
+  async function formAction(prevState, formData) {
     const formValues = Object.fromEntries(formData.entries());
+    const items = appCtx.orders;
     if (syncValidateAll(formValues, validate)) {
-      console.log("submitted");
-      return {};
+      const res = await requestCreateOrder({ ...formValues, items });
+      console.log(await res.json());
+      // temporary hold
+      return formValues;
     } else {
       return formValues;
     }
   }
 
-  const [formState, action] = useActionState(formAction, {});
+  const [formState, action, formPending] = useActionState(formAction, {});
   return (
     <div className="checkout-step">
       <div className="mb-4">
@@ -113,8 +119,11 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
             }}
           />
         </div>
-        <button className="py-2 px-14 bg-highlight text-white/90 block ml-auto rounded shadow-sm">
-          Submit
+        <button
+          className="py-2 px-14 bg-highlight text-white/90 block ml-auto rounded shadow-sm"
+          disabled={formPending}
+        >
+          {formPending ? "Ordering..." : "Submit"}
         </button>
       </form>
     </div>

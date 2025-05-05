@@ -22,10 +22,15 @@ export default function FoodItems() {
             The stars of our menu, all in one place
           </p>
         </div>
-        <p className="text-sm italic text-two">20 items</p>
+        <p className="text-sm italic text-two">
+          {Object.keys(appCtx.foodItems).length} items
+        </p>
       </div>
       {loadStatus === 1 && <p className="text-two text-center">Loading...</p>}
       {loadStatus === 2 && <FoodItemGrid />}
+      {loadStatus === 3 && (
+        <p className="text-center text-red-500/90">Failed to load data</p>
+      )}
     </div>
   );
 }

@@ -115,19 +115,21 @@ export default function useValidator(
       });
     } else {
       // synchronous validation
-      const validityResponse = vFunc(value);
-      const isValid = validityResponse.isValid;
-      const newMessage = validityResponse.msg
-        ? validityResponse.msg
-        : identityList[identity];
-      const newStatus = isValid ? 2 : 3;
+      let vStatus = 2;
+      let msg = null;
+      try {
+        vFunc.validateSync(value);
+      } catch (err) {
+        vStatus = 3;
+        msg = err.message;
+      }
       dispatchValidity(
         vActions.SET({
           identity: identity,
-          new: { vStatus: newStatus, msg: newMessage },
+          new: { vStatus, msg },
         })
       );
-      return isValid;
+      return vStatus === 2;
     }
   }
   return { validityStatuses, dispatchValidity, validate };
