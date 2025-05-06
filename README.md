@@ -1,12 +1,5 @@
-# React + Vite
+# Tuckr 🍽️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tuckr is a modern food ordering app built with React, designed for a seamless and intuitive user experience. Users can browse a curated list of available food items and add selections to their cart with a single click. The cart provides detailed information on each item, along with the ability to adjust quantities as needed. Upon proceeding to checkout, users are prompted to enter personal details such as name and address. Once submitted, the order is saved securely to the backend, and a confirmation message is displayed, completing the fast, convenient, and reliable food ordering process.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The frontend of Tuckr is developed using React 19, leveraging its latest features for a responsive and efficient UI. On the backend, the app is powered by FastAPI, ensuring high-performance and scalable request handling. Together, these technologies provide a robust foundation for a smooth and modern food ordering experience.
