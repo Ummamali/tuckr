@@ -4,6 +4,8 @@ Tuckr is a modern food ordering app built with React, designed for a seamless an
 
 The frontend of Tuckr is developed using React 19, leveraging its latest features for a responsive and efficient UI. On the backend, the app is powered by FastAPI, ensuring high-performance and scalable request handling. Together, these technologies provide a robust foundation for a smooth and modern food ordering experience.
 
+<img alt="Project Preview" src="./public/preview.jpg"/>
+
 This project also includes a backend powered by Python's FastAPI, which you can find [here](https://github.com/ummamali/tuckrbck).
 
 
