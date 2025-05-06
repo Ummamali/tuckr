@@ -61,14 +61,7 @@ export default function useValidator(validator) {
 
   // this is the majic function which will validate
   async function validate(identity, value) {
-    /* 
-    The validate function returns a value(boolean) if the validator is synchronous
-    and will return a promise(will resolve to a boolean) if the vaidator is asynchronous 
-
-    Dont worry if you are just interested in validation, validation will be done automatically
-
-    */
-    // async validation
+    // The validate async function resolves to a boolean value and also modifies the validationStatus of the field
     dispatchValidity(vActions.SET({ identity: identity, new: { vStatus: 1 } }));
 
     try {
@@ -80,7 +73,7 @@ export default function useValidator(validator) {
           new: { vStatus: 3, msg: err.message },
         })
       );
-      return 3;
+      return false;
     }
     dispatchValidity(
       vActions.SET({
@@ -88,42 +81,41 @@ export default function useValidator(validator) {
         new: { vStatus: 2, msg: null },
       })
     );
-    return 2;
+    return true;
   }
 
-  return { validityStatuses, dispatchValidity, validate };
+  async function validateAll(currentValues) {
+    const validations = Object.entries(currentValues).map(([identity, value]) =>
+      validate(identity, value)
+    );
+    const resolved = await Promise.all(validations);
+    return !resolved.includes(false);
+  }
+
+  return [validityStatuses, validate, validateAll, dispatchValidity];
 }
 
 // =============================================================================
 // Some utility functions to be used
 
-export function getDefaultValidator(validateCore) {
+export function validateOnBlur(validate) {
   /*
   Returns a blur event handler which will validate on blur:
-    --validateCore should be the same function as returned by the hook
+    -- validate should be the same function as returned by the hook
   */
   return (e) => {
     const target = e.target;
-    validateCore(target.dataset.identity, target.value);
+    validate(target.dataset.identity, target.value);
   };
 }
 
-export function getDefaultResetValidator(dispatchValidator) {
+export function resetOnFocus(dispatchValidator) {
   /*
   Returns a focus event handler which will reset validate on focus:
-    --dispatch should be the same function as returned by the hook
+    -- dispatchValidator should be the same function as returned by the hook
   */
   return (e) => {
     const identity = e.target.dataset.identity;
     dispatchValidator(vActions.RESET({ identity }));
   };
-}
-
-export function syncValidateAll(currentValues, validate) {
-  // returns whether the given values are valid or not
-  const validations = [];
-  for (const [identity, value] of Object.entries(currentValues)) {
-    validations.push(validate(identity, value));
-  }
-  return !validations.includes(false);
 }
