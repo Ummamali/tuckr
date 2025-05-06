@@ -1,39 +1,46 @@
 import React, { useActionState, useContext, useEffect } from "react";
 import { animate } from "animejs";
-import RefFormGroup from "../../utils/RefFormGroup";
 import ValidatedRefFG from "../../utils/ValidatedRefFG";
-import useValidator, { syncValidateAll } from "../../../hooks/useValidator";
-import { identityList, validatorPredicates } from "./checkoutValidations";
+import useValidator from "../../../hooks/useValidator";
+import { validator } from "./checkoutValidations";
 import { requestCreateOrder } from "../../../backend/connect";
 import { AppContext } from "../../context/AppContextProvides";
+import { animateFadeIn } from "../../../utilities/animations";
 
-export default function CheckoutStep({ fadeout, afterFadeout }) {
+export default function CheckoutStep({
+  startExit,
+  afterExit,
+  afterSubmission,
+}) {
   const appCtx = useContext(AppContext);
-  const { validityStatuses, validate, dispatchValidity } = useValidator(
-    identityList,
-    validatorPredicates
-  );
+  const [validityStatuses, validate, validateAll, dispatchValidity] =
+    useValidator(validator);
 
   useEffect(() => {
-    if (fadeout === "CHECKOUT_STEP") {
+    animateFadeIn(".checkout-step");
+  }, []);
+
+  useEffect(() => {
+    if (startExit) {
       animate(".checkout-step", {
         opacity: 0,
-        height: 0,
         duration: 250,
         easing: "easeOutQuad",
-        onComplete: afterFadeout,
+        onComplete: afterExit,
       });
     }
-  }, [fadeout]);
+  }, [startExit]);
 
   async function formAction(prevState, formData) {
     const formValues = Object.fromEntries(formData.entries());
     const items = appCtx.orders;
-    if (syncValidateAll(formValues, validate)) {
+    const proceed = await validateAll(formValues);
+    if (proceed) {
       const res = await requestCreateOrder({ ...formValues, items });
-      console.log(await res.json());
-      // temporary hold
-      return formValues;
+      if (res.ok) {
+        afterSubmission();
+        return {};
+      }
     } else {
       return formValues;
     }
@@ -41,7 +48,7 @@ export default function CheckoutStep({ fadeout, afterFadeout }) {
 
   const [formState, action, formPending] = useActionState(formAction, {});
   return (
-    <div className="checkout-step">
+    <div className="checkout-step opacity-0">
       <div className="mb-4">
         <h2 className="text-2xl text-black/80">Checkout</h2>
         <p className="text-sm text-black/60">

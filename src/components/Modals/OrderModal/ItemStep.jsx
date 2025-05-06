@@ -1,27 +1,23 @@
 import React, { useEffect } from "react";
 import ModalList from "./ModalList";
 import { animate } from "animejs";
+import { animateFadeIn } from "../../../utilities/animations";
 
-export default function ItemStep({ fadeout, afterFadeout }) {
+export default function ItemStep({ startExit, afterExit }) {
   useEffect(() => {
-    animate(".items-step", {
-      opacity: 1,
-      duration: 250,
-      easing: "easeOutQuad",
-    });
+    animateFadeIn(".items-step");
   }, []);
 
   useEffect(() => {
-    if (fadeout === "ITEMS_STEP") {
+    if (startExit) {
       animate(".items-step", {
         opacity: 0,
-        height: 0,
         duration: 250,
         easing: "easeOutQuad",
-        onComplete: afterFadeout,
+        onComplete: afterExit,
       });
     }
-  }, [fadeout]);
+  }, [startExit]);
   return (
     <div className="items-step opacity-0 ">
       <div className="mb-4">

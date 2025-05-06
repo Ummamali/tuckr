@@ -6,7 +6,7 @@ export default function ModalList() {
   const appCtx = useContext(AppContext);
   const foodItems = appCtx.foodItems;
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 max-h-[400px] overflow-y-auto">
       {Object.keys(appCtx.orders).length === 0 && (
         <p className="text-center text-black/60 text-sm">
           <span className="font-medium">No Orderds!</span> Looks like you
